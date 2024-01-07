@@ -108,7 +108,7 @@ public class Translator {
                 match('(');
 
                 int loopStart = code.newLabel();
-                int loopBody = code.newLabel();
+                // int loopBody = code.newLabel();
                 int loopEnd = code.newLabel();
 
                 if (look.tag == Tag.ID) {
@@ -129,7 +129,7 @@ public class Translator {
                     match(')');
                     match(Tag.DO);
                     // code.emit(OpCode.GOto, loopEnd);
-                    code.emitLabel(loopBody);
+                    // code.emitLabel(loopBody);
                     stat(lnext_prog);
                     code.emit(OpCode.GOto, loopStart);
                     code.emitLabel(loopEnd);
@@ -148,21 +148,29 @@ public class Translator {
 
             case Tag.IF:
                 int ifBody = code.newLabel();
+                int ifElse = code.newLabel();
                 int ifEnd = code.newLabel();
 
                 match(Tag.IF);
                 match('(');
                 bexpr(ifBody);
                 match(')');
-                code.emit(OpCode.GOto, ifEnd);
+                code.emit(OpCode.GOto, ifElse);
                 code.emitLabel(ifBody);
                 stat(lnext_prog);
                 if (look.tag == Tag.ELSE) {
+                    code.emit(OpCode.GOto, ifEnd);
+                    code.emitLabel(ifElse);
                     match(Tag.ELSE);
-                    code.emitLabel(ifEnd);
                     stat(lnext_prog);
+
+                } else {
+                    code.emitLabel(ifElse);
+                    code.emit(OpCode.GOto, ifEnd);
                 }
+
                 match(Tag.END);
+                // code.emit(OpCode.GOto, ifEnd);
                 code.emitLabel(ifEnd);
                 break;
 
@@ -362,7 +370,7 @@ public class Translator {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "./sample_if_else.lft"; // the path to the file to be read
+        String path = "./sample_final.lft"; // the path to the file to be read
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Translator translator = new Translator(lex, br);
