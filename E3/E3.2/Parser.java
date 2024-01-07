@@ -25,7 +25,7 @@ public class Parser {
             if (look.tag != Tag.EOF)
                 move();
         } else {
-            error("syntax error. Expected: " + (char) t + ", Found: " + look);
+            error("syntax error. Expected: " + t + ", Found: " + look);
         }
     }
 
@@ -52,61 +52,139 @@ public class Parser {
         }
     }
 
-    private void stat() {
-        if (look.tag == Tag.ASSIGN) {
-            match(Tag.ASSIGN);
-            assignlist();
-        } else if (look.tag == Tag.PRINT) {
-            match(Tag.PRINT);
-            match(Tag.LPT);
-            exprlist();
-            match(Tag.RPT);
-        } else if (look.tag == Tag.READ) {
-            match(Tag.READ);
-            match('(');
-            idlist();
-            match(')');
-        } else if (look.tag == Tag.FOR) {
-            match(Tag.FOR);
-            match('('); // Opening parenthesis
-            if (look.tag == Tag.ID) {
-                match(Tag.ID);
-                match(Tag.INIT);
-            }
-            expr();
-            match(';');
-            bexpr();
-            match(')'); // Closing parenthesis
-            match(Tag.DO);
-            stat();
-        } else if (look.tag == Tag.FOR) {
-            match(Tag.FOR);
-            match('('); // Opening parenthesis
-            bexpr();
-            match(')'); // Closing parenthesis
-            match(Tag.DO);
-            stat();
-        } else if (look.tag == Tag.IF) {
-            match(Tag.IF);
-            bexpr();
-            stat();
-            if (look.tag == Tag.ELSE) {
-                match(Tag.ELSE);
+    // private void stat() {
+    // if (look.tag == Tag.ASSIGN) {
+    // match(Tag.ASSIGN);
+    // assignlist();
+    // } else if (look.tag == Tag.PRINT) {
+    // match(Tag.PRINT);
+    // match(Tag.LPT);
+    // exprlist();
+    // match(Tag.RPT);
+    // } else if (look.tag == Tag.READ) {
+    // match(Tag.READ);
+    // match('(');
+    // idlist();
+    // match(')');
+    // } else if (look.tag == Tag.FOR) {
+    // match(Tag.FOR);
+    // match('('); // Opening parenthesis
+    // if (look.tag == Tag.ID) {
+    // match(Tag.ID);
+    // match(Tag.INIT);
+    // }
+    // expr();
+    // match(';');
+    // bexpr();
+    // match(')'); // Closing parenthesis
+    // match(Tag.DO);
+    // stat();
+    // } else if (look.tag == Tag.FOR) {
+    // match(Tag.FOR);
+    // match('('); // Opening parenthesis
+    // bexpr();
+    // match(')'); // Closing parenthesis
+    // match(Tag.DO);
+    // stat();
+    // } else if (look.tag == Tag.IF) {
+    // match(Tag.IF);
+    // bexpr();
+    // stat();
+    // if (look.tag == Tag.ELSE) {
+    // match(Tag.ELSE);
+    // stat();
+    // }
+    // match(Tag.END);
+    // } else if (look.tag == Tag.IF) {
+    // match(Tag.IF);
+    // bexpr();
+    // stat();
+    // match(Tag.END);
+    // } else if (look.tag == Tag.LPG) {
+    // match(Tag.LPG);
+    // statlist();
+    // match(Tag.RPG);
+    // } else {
+    // error("syntax error");
+    // }
+    // }
+    public void stat() {
+        switch (look.tag) {
+            // ... completare ...
+
+            case Tag.ASSIGN:
+                match(Tag.ASSIGN);
+                assignlist();
+                break;
+
+            case Tag.PRINT:
+                match(Tag.PRINT);
+                match('(');
+                exprlist();
+                match(')');
+                break;
+
+            case Tag.READ:
+                match(Tag.READ);
+                match('(');
+                idlist();
+                match(')');
+                break;
+
+            case Tag.FOR:
+                match(Tag.FOR);
+                match('(');
+
+                if (look.tag == Tag.ID) {
+
+                    match(Tag.ID);
+                    match(Tag.INIT);
+                    expr();
+                    match(';');
+                    bexpr();
+                    match(')');
+                    match(Tag.DO);
+                    stat();
+
+                } else {
+
+                    bexpr();
+                    match(')');
+                    match(Tag.DO);
+                    stat();
+                }
+                break;
+
+            case Tag.IF:
+
+                match(Tag.IF);
+                match('(');
+                bexpr();
+                match(')');
                 stat();
-            }
-            match(Tag.END);
-        } else if (look.tag == Tag.IF) {
-            match(Tag.IF);
-            bexpr();
-            stat();
-            match(Tag.END);
-        } else if (look.tag == Tag.LPG) {
-            match(Tag.LPG);
-            statlist();
-            match(Tag.RPG);
-        } else {
-            error("syntax error");
+                if (look.tag == Tag.ELSE) {
+                    match(Tag.ELSE);
+                    stat();
+
+                }
+
+                match(Tag.END);
+                break;
+
+            case '{':
+                match('{');
+                statlist();
+                match('}');
+
+                break;
+
+            default:
+                error("Invalid Syntax in stat");
+                break;
+
+            // ... completare ...
         }
+
     }
 
     private void assignlist() {
@@ -192,7 +270,7 @@ public class Parser {
                 break;
 
             default:
-                error("Syntax error");
+                error("Syntax error in expr");
         }
     }
 
@@ -205,6 +283,7 @@ public class Parser {
 
         switch (look.tag) {
             case ',':
+                match(',');
                 expr();
                 exprlistp();
                 break;
