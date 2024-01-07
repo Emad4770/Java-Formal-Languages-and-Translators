@@ -1,0 +1,1 @@
+for(x := 0 ; > x 7) do {assign [+(x,1) to x]; print (x)}

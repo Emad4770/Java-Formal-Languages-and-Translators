@@ -1,0 +1,6 @@
+print(3);
+assign [23 to jack];
+read(jack, rupert);
+for(jack := 23 ; >= 69 rupert) do {
+    print(HelloWorld)
+}

@@ -1,0 +1,2 @@
+assign [ 0 to a];
+for (> a 5 ) do assign[ +(a,1) to a]
