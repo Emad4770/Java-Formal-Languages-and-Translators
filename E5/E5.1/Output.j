@@ -30,24 +30,24 @@
 .method public static run()V
  .limit stack 1024
  .limit locals 256
- ldc 0
+ ldc 7
  istore 0
+ goto L1
 L1:
  iload 0
- ldc 7
- if_icmpgt L3
+ ldc 6
+ if_icmpgt L2
+ goto L3
 L2:
  iload 0
- ldc 1
- iadd 
- istore 0
+ invokestatic Output/print(I)V
  goto L4
 L4:
- iload 0
+L3:
+ ldc 1
  invokestatic Output/print(I)V
  goto L5
 L5:
- goto L1
 L3:
  goto L0
 L0:

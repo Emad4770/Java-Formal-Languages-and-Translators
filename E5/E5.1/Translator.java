@@ -147,16 +147,23 @@ public class Translator {
                 break;
 
             case Tag.IF:
+                int ifBody = code.newLabel();
+                int ifEnd = code.newLabel();
+
                 match(Tag.IF);
                 match('(');
-                bexpr(lnext_prog);
+                bexpr(ifBody);
                 match(')');
+                code.emit(OpCode.GOto, ifEnd);
+                code.emitLabel(ifBody);
                 stat(lnext_prog);
                 if (look.tag == Tag.ELSE) {
                     match(Tag.ELSE);
+                    code.emitLabel(ifEnd);
                     stat(lnext_prog);
                 }
                 match(Tag.END);
+                code.emitLabel(ifEnd);
                 break;
 
             case '{':
@@ -355,7 +362,7 @@ public class Translator {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "./sample2.txt"; // the path to the file to be read
+        String path = "./sample_if_else.lft"; // the path to the file to be read
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Translator translator = new Translator(lex, br);
