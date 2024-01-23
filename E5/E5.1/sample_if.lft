@@ -1,3 +1,0 @@
-assign [ 7 to a];
-
-if ( > a 6 ) print(a) end
