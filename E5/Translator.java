@@ -17,6 +17,18 @@ public class Translator {
     SymbolTable st = new SymbolTable();
     CodeGenerator code = new CodeGenerator();
     int count = 0;
+    boolean read = false;
+    boolean print = false;
+    boolean assign = false;
+    boolean add = false;
+    boolean sub = false;
+    boolean mul = false;
+    boolean div = false;
+    int add_op = 0;
+    int sub_op = 0;
+    int mul_op = 0;
+    int div_op = 0;
+    int ldc_val;
 
     public Translator(Lexer l, BufferedReader br) {
         lex = l;
@@ -84,33 +96,39 @@ public class Translator {
             // ... completare ...
 
             case Tag.ASSIGN:
+                assign = true;
                 match(Tag.ASSIGN);
                 assignlist(lnext_prog);
                 lnext_prog = code.newLabel();
                 code.emit(OpCode.GOto, lnext_prog);
                 code.emitLabel(lnext_prog);
+                assign = false;
                 break;
 
             case Tag.PRINT:
                 match(Tag.PRINT);
+                print = true;
                 match('(');
                 exprlist(lnext_prog);
                 match(')');
-                code.emit(OpCode.invokestatic, 1);
+                // code.emit(OpCode.invokestatic, 1);
                 lnext_prog = code.newLabel();
                 code.emit(OpCode.GOto, lnext_prog);
                 code.emitLabel(lnext_prog);
+                print = false;
                 break;
 
             case Tag.READ:
                 match(Tag.READ);
-                code.emit(OpCode.invokestatic, 0);
+                read = true;
+                // code.emit(OpCode.invokestatic, 0);
                 match('(');
                 idlist(lnext_prog);
                 match(')');
                 lnext_prog = code.newLabel();
                 code.emit(OpCode.GOto, lnext_prog);
                 code.emitLabel(lnext_prog);
+                read = false;
                 break;
 
             case Tag.FOR:
@@ -242,6 +260,9 @@ public class Translator {
                     id_addr = count;
                     st.insert(((Word) look).lexeme, count++);
                 }
+                if (read) {
+                    code.emit(OpCode.invokestatic, 0);
+                }
                 code.emit(OpCode.istore, id_addr);
                 match(Tag.ID);
                 idlistp(lnext_prog);
@@ -258,13 +279,23 @@ public class Translator {
         switch (look.tag) {
             case ',':
                 match(',');
+                // if (read) {
+                // code.emit(OpCode.invokestatic, 0);
+                // }
                 int id_addr = st.lookupAddress(((Word) look).lexeme);
                 if (id_addr == -1) {
                     id_addr = count;
                     st.insert(((Word) look).lexeme, count++);
                 }
-                match(Tag.ID);
+                if (assign) {
+                    code.emit(OpCode.ldc, ldc_val);
+
+                }
+                if (read) {
+                    code.emit(OpCode.invokestatic, 0);
+                }
                 code.emit(OpCode.istore, id_addr);
+                match(Tag.ID);
                 idlistp(lnext_prog);
 
                 break;
@@ -315,64 +346,98 @@ public class Translator {
     }
 
     private void expr(int lnext_prog) {
+
         switch (look.tag) {
+
             case '+':
+                add = true;
                 match('+');
                 match('(');
                 exprlist(lnext_prog);
                 match(')');
-                code.emit(OpCode.iadd);
+                add = false;
                 break;
             case '-':
                 match('-');
                 expr(lnext_prog);
                 expr(lnext_prog);
                 code.emit(OpCode.isub);
+
                 break;
             case '*':
+                mul = true;
+
                 match('*');
                 match('(');
                 exprlist(lnext_prog);
                 match(')');
-                code.emit(OpCode.imul);
+
+                mul = false;
+
                 break;
             case '/':
+
                 match('/');
                 expr(lnext_prog);
                 expr(lnext_prog);
                 code.emit(OpCode.idiv);
+
                 break;
 
             case Tag.NUM:
+
                 code.emit(OpCode.ldc, ((NumberTok) look).value);
+                ldc_val = ((NumberTok) look).value;
                 match(Tag.NUM);
+
                 break;
 
             case Tag.ID:
+
                 int id_addr = st.lookupAddress(((Word) look).lexeme);
                 if (id_addr == -1) {
                     error("Undeclared variable: " + (((Word) look).lexeme));
                 }
                 code.emit(OpCode.iload, id_addr);
+
                 match(Tag.ID);
                 break;
             default:
                 error("Syntax error in expr");
                 // ... completare ...
         }
+        if (print && !add && !mul) {
+            code.emit(OpCode.invokestatic, 1); // Emit print instruction after evaluating each expression
+        }
+
     }
 
     private void exprlist(int lnext_prog) {
+
         expr(lnext_prog);
+
         exprlistp(lnext_prog);
+
     }
 
     private void exprlistp(int lnext_prog) {
         switch (look.tag) {
             case ',':
+
                 match(',');
+
                 expr(lnext_prog);
+                if (add) {
+                    code.emit(OpCode.iadd);
+
+                }
+                if (mul) {
+                    code.emit(OpCode.imul);
+
+                }
+
                 exprlistp(lnext_prog);
+
                 break;
 
         }
@@ -380,7 +445,7 @@ public class Translator {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "./sample_final.lft"; // the path to the file to be read
+        String path = "./sample.lft"; // the path to the file to be read
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Translator translator = new Translator(lex, br);

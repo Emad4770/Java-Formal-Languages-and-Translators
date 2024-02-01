@@ -1,0 +1,9 @@
+/*Commenti***/
+read (a_1, _2b); /*Eculid***/
+for( x:=0; <> a_1 _2b) do
+if (> a_1 _2b) assign [- a_1 _2b to a_1]
+else assign [ - _2b a_1 to _2b]
+end;
+print (a_1, _2b, 100);
+assign[20 to _2b, c, d];
+print(+(_2b,c,d) , 303) //end

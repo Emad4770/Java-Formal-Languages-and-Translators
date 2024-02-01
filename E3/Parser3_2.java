@@ -56,62 +56,6 @@ public class Parser3_2 {
         }
     }
 
-    // private void stat() {
-    // if (look.tag == Tag.ASSIGN) {
-    // match(Tag.ASSIGN);
-    // assignlist();
-    // } else if (look.tag == Tag.PRINT) {
-    // match(Tag.PRINT);
-    // match(Tag.LPT);
-    // exprlist();
-    // match(Tag.RPT);
-    // } else if (look.tag == Tag.READ) {
-    // match(Tag.READ);
-    // match('(');
-    // idlist();
-    // match(')');
-    // } else if (look.tag == Tag.FOR) {
-    // match(Tag.FOR);
-    // match('('); // Opening parenthesis
-    // if (look.tag == Tag.ID) {
-    // match(Tag.ID);
-    // match(Tag.INIT);
-    // }
-    // expr();
-    // match(';');
-    // bexpr();
-    // match(')'); // Closing parenthesis
-    // match(Tag.DO);
-    // stat();
-    // } else if (look.tag == Tag.FOR) {
-    // match(Tag.FOR);
-    // match('('); // Opening parenthesis
-    // bexpr();
-    // match(')'); // Closing parenthesis
-    // match(Tag.DO);
-    // stat();
-    // } else if (look.tag == Tag.IF) {
-    // match(Tag.IF);
-    // bexpr();
-    // stat();
-    // if (look.tag == Tag.ELSE) {
-    // match(Tag.ELSE);
-    // stat();
-    // }
-    // match(Tag.END);
-    // } else if (look.tag == Tag.IF) {
-    // match(Tag.IF);
-    // bexpr();
-    // stat();
-    // match(Tag.END);
-    // } else if (look.tag == Tag.LPG) {
-    // match(Tag.LPG);
-    // statlist();
-    // match(Tag.RPG);
-    // } else {
-    // error("syntax error");
-    // }
-    // }
     public void stat() {
         switch (look.tag) {
             // ... completare ...

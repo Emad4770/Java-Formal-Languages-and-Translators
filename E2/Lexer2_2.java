@@ -131,15 +131,15 @@ public class Lexer2_2 {
                     return null;
                 }
 
+                // case '_':
+                // System.err.println("Identifiers cannot start with an underscore: " + peek);
+                // return null;
+
             case (char) -1:
                 return new Token(Tag.EOF);
 
-            case '_':
-                System.err.println("Identifiers cannot start with an underscore: " + peek);
-                return null;
-
             default:
-                if (Character.isLetterOrDigit(peek)) {
+                if (Character.isLetterOrDigit(peek) || peek == '_') {
                     // Handle identifiers and keywords
                     StringBuilder lexemeBuilder = new StringBuilder();
                     do {
@@ -149,7 +149,7 @@ public class Lexer2_2 {
 
                     String lexeme = lexemeBuilder.toString().toLowerCase(); // Convert to lowercase for case-insensitive
                                                                             // comparison
-                    if (lexeme.matches("[a-z_A-Z](_(_)*[a-zA-Z0-9])*[a-zA-Z0-9_]*")) {
+                    if (lexeme.matches("^(?!_+$)[a-zA-Z_][a-zA-Z0-9_]*$")) {
                         switch (lexeme) {
                             case "assign":
                                 return Word.assign;
