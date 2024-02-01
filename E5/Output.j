@@ -36,7 +36,7 @@
  istore 1
  goto L1
 L1:
- ldc 3
+ ldc 0
  istore 2
 L2:
  iload 0
