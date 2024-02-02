@@ -1,10 +1,8 @@
 package E3;
-// package E5;
 
 import java.io.*;
-// import java.util.*;
 
-public class Lexer {
+public class Lexer2 {
     public static int line = 1;
     private char peek = ' ';
 
@@ -22,7 +20,6 @@ public class Lexer {
                 line++;
             readch(br);
         }
-
         // Handle comments
         if (peek == '/') {
             readch(br);
@@ -166,10 +163,6 @@ public class Lexer {
 
             case (char) -1:
                 return new Token(Tag.EOF);
-
-            // case '_':
-            // System.err.println("Identifiers cannot start with an underscore: " + peek);
-            // return null;
             default:
                 if (Character.isLetter(peek) || peek == '_') {
                     // Handle identifiers and keywords
@@ -177,7 +170,7 @@ public class Lexer {
                     do {
                         lexemeBuilder.append(peek);
                         readch(br);
-                    } while (Character.isLetterOrDigit(peek) || peek == '_');
+                    } while (Character.isLetter(peek) || peek == '_');
 
                     String lexeme = lexemeBuilder.toString().toLowerCase(); // Convert to lowercase for case-insensitive
                                                                             // comparison

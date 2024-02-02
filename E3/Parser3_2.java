@@ -241,7 +241,7 @@ public class Parser3_2 {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "./sample3_2.lft"; // the path to the file to be read
+        String path = "./sample3_22.lft"; // the path to the file to be read
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Parser3_2 parser = new Parser3_2(lex, br);
