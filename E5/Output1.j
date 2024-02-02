@@ -42,46 +42,44 @@ L2:
  iload 0
  iload 1
  if_icmpne L3
- goto L4
-L3:
  iload 0
  iload 1
- if_icmpgt L5
- goto L6
-L5:
+ if_icmpgt L4
+ goto L5
+L4:
  iload 0
  iload 1
  isub 
  istore 0
- goto L8
-L8:
  goto L7
-L6:
+L7:
+ goto L6
+L5:
  iload 1
  iload 0
  isub 
  istore 1
- goto L9
-L9:
-L7:
+ goto L8
+L8:
+L6:
  goto L2
-L4:
+L3:
  iload 0
  invokestatic Output/print(I)V
  iload 1
  invokestatic Output/print(I)V
  ldc 100
  invokestatic Output/print(I)V
- goto L10
-L10:
+ goto L9
+L9:
  ldc 20
  istore 1
  ldc 20
  istore 3
  ldc 20
  istore 4
- goto L11
-L11:
+ goto L10
+L10:
  iload 1
  iload 3
  iadd 
@@ -90,8 +88,8 @@ L11:
  invokestatic Output/print(I)V
  ldc 303
  invokestatic Output/print(I)V
- goto L12
-L12:
+ goto L11
+L11:
  goto L0
 L0:
  return

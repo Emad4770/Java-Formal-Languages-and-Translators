@@ -136,7 +136,7 @@ public class Translator {
                 match('(');
 
                 int loopStart = code.newLabel();
-                // int loopBody = code.newLabel();
+                int loopBody = code.newLabel();
                 int loopEnd = code.newLabel();
 
                 if (look.tag == Tag.ID) {
@@ -153,11 +153,11 @@ public class Translator {
                     code.emit(OpCode.istore, idAddr);
                     match(';');
                     code.emitLabel(loopStart);
-                    bexpr(loopEnd);
+                    bexpr(loopBody);
                     match(')');
                     match(Tag.DO);
-                    // code.emit(OpCode.GOto, loopEnd);
-                    // code.emitLabel(loopBody);
+                    code.emit(OpCode.GOto, loopEnd);
+                    code.emitLabel(loopBody);
                     stat(lnext_prog);
                     code.emit(OpCode.GOto, loopStart);
                     code.emitLabel(loopEnd);
@@ -165,9 +165,11 @@ public class Translator {
                 } else {
 
                     code.emitLabel(loopStart);
-                    bexpr(loopEnd);
+                    bexpr(loopBody);
                     match(')');
                     match(Tag.DO);
+                    code.emit(OpCode.GOto, loopEnd);
+                    code.emitLabel(loopBody);
                     stat(lnext_prog);
                     code.emit(OpCode.GOto, loopStart);
                     code.emitLabel(loopEnd);
